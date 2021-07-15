@@ -6,14 +6,14 @@ import (
 	"sync"
 )
 
-func getAllPostsInParallel() {
+func getPostsInParallel(n int) {
 	// setup client
 	cl := HTTPClient{}.Setup()
 
 	var wg sync.WaitGroup
 
 	// get posts in paralell
-	for i := 1; i <= 100; i++ {
+	for i := 1; i <= 5; i++ {
 		wg.Add(1)
 		go func(wg *sync.WaitGroup, i int) {
 			defer wg.Done()
@@ -21,9 +21,8 @@ func getAllPostsInParallel() {
 			post := Post{}
 			err := cl.Get(fmt.Sprintf("https://jsonplaceholder.typicode.com/posts/%d", i), &post)
 			if err != nil {
-				log.Panicln("failed to get post")
+				log.Fatal("failed to get post")
 			}
-			log.Printf("Post: \n %+v \n", post)
 
 		}(&wg, i)
 	}
