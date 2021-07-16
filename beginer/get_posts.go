@@ -12,6 +12,6 @@ func getAllPosts() {
 	posts := []Post{}
 	err := cl.Get("https://jsonplaceholder.typicode.com/posts", &posts)
 	if err != nil {
-		log.Fatal("failed to get posts")
+		log.Fatal("failed to get posts:", err)
 	}
 }

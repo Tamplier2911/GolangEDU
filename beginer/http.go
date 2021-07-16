@@ -8,6 +8,10 @@ import (
 	"net/http"
 )
 
+type HTTPClient struct {
+	Client *http.Client
+}
+
 // Initialize and setup HTTPCleint, returns instance of HTTPCleint
 func (c HTTPClient) Setup() HTTPClient {
 	// init client
@@ -21,7 +25,6 @@ func (c *HTTPClient) Get(url string, i interface{}) error {
 	log.Println("request", url)
 	resp, err := c.Client.Get(url)
 	if err != nil {
-		log.Fatal("request failed", err)
 		return errors.New("request failed")
 	}
 	log.Println("response", resp)
@@ -31,7 +34,6 @@ func (c *HTTPClient) Get(url string, i interface{}) error {
 	log.Println("reading responce body")
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal("failed to read response body", err)
 		return errors.New("failed to read response body")
 	}
 	log.Println("body", string(body[:]))
@@ -40,8 +42,7 @@ func (c *HTTPClient) Get(url string, i interface{}) error {
 	log.Println("unmarshaling response body")
 	err = json.Unmarshal(body, &i)
 	if err != nil {
-		log.Fatal("failed to unmarshal response body", err)
-		return errors.New("failed to unmarshal body")
+		return errors.New("failed to unmarshal response body")
 	}
 
 	return nil
@@ -53,17 +54,15 @@ func (c *HTTPClient) GetRaw(url string) ([]byte, error) {
 	log.Println("request", url)
 	resp, err := c.Client.Get(url)
 	if err != nil {
-		log.Fatal("request failed", err)
 		return nil, errors.New("request failed")
 	}
-	log.Println("response", resp)
+	// log.Println("response", resp)
 	defer resp.Body.Close()
 
 	// read res body
 	log.Println("reading responce body")
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal("failed to read response body", err)
 		return nil, errors.New("failed to read response body")
 	}
 

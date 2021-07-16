@@ -21,7 +21,7 @@ func getPostsInParallel(n int) {
 			post := Post{}
 			err := cl.Get(fmt.Sprintf("https://jsonplaceholder.typicode.com/posts/%d", i), &post)
 			if err != nil {
-				log.Fatal("failed to get post")
+				log.Fatal("failed to get post:", err)
 			}
 
 		}(&wg, i)
