@@ -1,9 +1,9 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
-	"log"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
@@ -20,26 +20,6 @@ func main() {
 
 	// get all posts of user with id 7
 	// get all comments for each post and write them in db in paralel
-	// getPostsWritePostsDB()
+	getPostsWritePostsDB(1)
 
-	// db := DataBase{}.Setup()
-	// defer db.Close()
-
-	// http://go-database-sql.org/modifying.html
-
-	// setup driver
-	db, err := sql.Open("mysql",
-		"root:@tcp(127.0.0.1:3306)/test_db")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// ping for connection
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// close db
-	defer db.Close()
 }

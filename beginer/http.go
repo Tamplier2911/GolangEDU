@@ -36,7 +36,7 @@ func (c *HTTPClient) Get(url string, i interface{}) error {
 	if err != nil {
 		return errors.New("failed to read response body")
 	}
-	log.Println("body", string(body[:]))
+	// log.Println("body", string(body[:]))
 
 	// unmarshal res body
 	log.Println("unmarshaling response body")
