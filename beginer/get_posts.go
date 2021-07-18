@@ -4,6 +4,7 @@ import (
 	"log"
 )
 
+// Get all posts from json placeholder
 func getAllPosts() {
 	// setup client
 	cl := HTTPClient{}.Setup()

@@ -6,14 +6,15 @@ import (
 	"sync"
 )
 
-func getPostsInParallel(n int) {
+// Get all posts from jsonplaceholder in parallel
+func getPostsInParallel(postsNum int) {
 	// setup client
 	cl := HTTPClient{}.Setup()
 
 	var wg sync.WaitGroup
 
-	// get posts in paralell
-	for i := 1; i <= 5; i++ {
+	// get posts in parallel
+	for i := 1; i <= postsNum; i++ {
 		wg.Add(1)
 		go func(wg *sync.WaitGroup, i int) {
 			defer wg.Done()

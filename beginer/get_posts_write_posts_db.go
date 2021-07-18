@@ -6,10 +6,8 @@ import (
 	"sync"
 )
 
-// TODO:
-// consider refactoring this function to leverage use of channels
-// or make another one that leverages channel to accomplish some goal
-
+// Get all posts from json placeholder with user id of <n>
+// get all comments for each post in parallel, save everything in database in in parallel
 func getPostsWritePostsDB(userId int) {
 	// setup client
 	c := HTTPClient{}.Setup()
@@ -23,7 +21,7 @@ func getPostsWritePostsDB(userId int) {
 	defer db.Close()
 
 	// get all posts
-	log.Println("getting all posts for user with id of 7")
+	log.Println("getting all posts for user with id:", userId)
 	posts := []Post{}
 	err = c.Get(fmt.Sprintf("https://jsonplaceholder.typicode.com/posts?userId=%d", userId), &posts)
 	if err != nil {
@@ -33,7 +31,7 @@ func getPostsWritePostsDB(userId int) {
 
 	var wg sync.WaitGroup
 
-	// get comments for each post in paralell
+	// get comments for each post in parallel
 	log.Println("getting comments for each post")
 	for _, p := range posts {
 		wg.Add(1)
@@ -41,14 +39,14 @@ func getPostsWritePostsDB(userId int) {
 		go func(p Post, wg *sync.WaitGroup) {
 			defer wg.Done()
 
-			// save post to database
+			// insert post in to database
 			err = db.Insert("posts", p)
 			if err != nil {
-				log.Fatal("failed to create post:", err)
+				log.Fatal("failed to insert post to database:", err)
 			}
 			log.Println("successfully insert data to database")
 
-			// fetch comments for each post in paralell
+			// fetch comments for each post in parallel
 			var comments []Comment
 			err = c.Get(fmt.Sprintf("https://jsonplaceholder.typicode.com/comments?postId=%d", p.ID), &comments)
 			if err != nil {
@@ -56,7 +54,7 @@ func getPostsWritePostsDB(userId int) {
 			}
 			log.Println("successfully fetched comments")
 
-			// save each comment in database in paralell
+			// insert each comment in to database in parallel
 			for _, c := range comments {
 				wg.Add(1)
 
@@ -65,7 +63,7 @@ func getPostsWritePostsDB(userId int) {
 					// save comment to database
 					err = db.Insert("comments", c)
 					if err != nil {
-						log.Fatal("failed to create post:", err)
+						log.Fatal("failed to insert comment in database:", err)
 					}
 					log.Println("successfully insert data to database")
 

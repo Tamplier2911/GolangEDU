@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-func getPostsWritePostsIO(n int) {
+func getPostsWritePostsIO(postsNum int) {
 	// setup client
 	cl := HTTPClient{}.Setup()
 
@@ -22,8 +22,8 @@ func getPostsWritePostsIO(n int) {
 		log.Fatal("failed to create directory:", err)
 	}
 
-	// get posts in paralell
-	for i := 1; i <= 5; i++ {
+	// get posts in parallel
+	for i := 1; i <= postsNum; i++ {
 		wg.Add(1)
 		go func(wg *sync.WaitGroup, i int) {
 			defer wg.Done()
