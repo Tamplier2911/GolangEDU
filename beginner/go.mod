@@ -1,4 +1,4 @@
-module github.com/Tamplier2911/GolangEDU/beginer
+module github.com/Tamplier2911/GolangEDU/beginner
 
 go 1.16
 
